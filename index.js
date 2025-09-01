@@ -15,26 +15,34 @@ import { fileURLToPath } from "url";
 
 dotenv.config();
 
+// Apply CORS to all routes
+
+
 const app = express();
 const server = createServer(app);
 const Port = process.env.PORT || 8000;
+// CORS configuration
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://workmate-two.vercel.app"
+  ],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
+
+  // ✅ apply globally
+app.options("*", cors(corsOptions));
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
 
-// CORS configuration
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  exposedHeaders: ["Content-Range", "X-Content-Range"],
-};
 
-// Apply CORS to all routes
-app.use(cors(corsOptions));
+
+
 
 // Initialize Socket.IO and VideoSocket with error handling
 let io;
